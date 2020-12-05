@@ -81,6 +81,25 @@ def choose_step(field):
 def full_field(field):
     return "-" not in field
 
+#Функция находит лучший вариант хода для AI и возвращает индекс
+def find_best(field):
+    global side
+    x, y = ("x", "o") if side else ("o", "x")
+    if field[5] == field[7] == field[13] == field[15] == "-":
+        return 5
+    elif any([field[5] == x and field[7] == "-" and field[15] == "-" and field[13] == "-",
+              field[5] == "-" and field[7] == x and field[15] == "-" and field[13] == "-",
+              field[5] == "-" and field[7] == "-" and field[15] == x and field[13] == "-",
+              field[5] == "-" and field[7] == "-" and field[15] == "-" and field[13] == x]):
+        return 10
+    elif any([field[5] == x and field[10] == y and field[15] == x and field[6] == "-",
+              field[10] == y and field[7] == x and field[13] == x and field[6] == "-"]):
+        return 6
+    elif  (field[5] == y and (field[7] == x or field[13] == x) and field[15] == "-"):
+        return 15
+    else:
+        return find_first(field)
+
 #Функция определяет, куда походит AI, и возвращает значение индекса
 def ai_step(field):
     global game_diff
@@ -88,7 +107,7 @@ def ai_step(field):
     a=who_can_win(field)
     if a: return a
     if not game_diff: return find_first(field)
-    return 15
+    return find_best(field)
 
 #Функция предоставляет поочередно возможность ходить игрокам.
 #Когда кто-то выигрывает, или заполняется поле, возвращает код победителя
