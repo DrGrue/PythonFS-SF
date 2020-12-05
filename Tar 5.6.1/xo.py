@@ -1,4 +1,6 @@
+#Исходное игровое поле
 field = [" ",0,1,2,0,"-","-","-",1,"-","-","-",2,"-","-","-"]
+#Список строк, стобцов и диагоналей нашего поля
 strikes = [(5,6,7),(9,10,11),(13,14,15),(5,9,13),(6,10,14),(7,11,15),(5,10,15),(7,10,13)]
 
 #Выбор уровня сложности
@@ -11,6 +13,11 @@ def choose_diff():
     if n not in ["0", "1"]:
         print("Разве я могу не поддаваться тому, кто не справился даже с простейшим заданием?")
     return n == '1'
+
+#Находит индекс первого свободного поля для хода компьютера
+def find_first(field):
+    for i in range(5,16):
+        if field[i] == "-": return i
 
 #Проверка наличия потенциально выигрышных/проигрышных ситуаций
 def who_can_win(field):
@@ -80,9 +87,7 @@ def ai_step(field):
     print("Отлично. Мой ход!")
     a=who_can_win(field)
     if a: return a
-    i=0
-    while True:
-       break
+    if not game_diff: return find_first(field)
     return 15
 
 #Функция предоставляет поочередно возможность ходить игрокам.
@@ -92,7 +97,7 @@ def game_process(side):
     tor = side
     print_field(field)
     x, y = ("x", "o") if side else ("o", "x")
-    while not winner(field,not tor) or full_field(field):
+    while not(winner(field,not tor) or full_field(field)):
         if tor:
             field[choose_step(field)] = x
         else:
@@ -108,7 +113,6 @@ if game_diff:
 else:
     print("Уровень сложности: Элементарный.")
 side = choose_side()
-print(side)
 result = game_process(side)
 if result == 2:
     print("Ничья!")
